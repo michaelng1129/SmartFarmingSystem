@@ -1,0 +1,10 @@
+#define LEFTWINDOWSSERVO_PIN 25
+#define RIGHTWINDOWSSERVO_PIN 26
+
+#define DHT_PIN 33
+#define DHT_TYPE DHT22
+
+#define LED_DATA_PIN 13
+
+#define AIR_TX_PIN 17
+#define AIR_RX_PIN 16
