@@ -32,7 +32,7 @@ void setAtomizationCooling(bool state);
 void setupWiFi();
 void reconnect();
 
-const float TEMPERATURE_THRESHOLD = 30.0;
+const float TEMPERATURE_THRESHOLD = 35.0;
 const float OPTIMAL_LUX = 500.0;
 const int CO2_THRESHOLD = 500;
 const float FAN_SPEED = 30.0;
@@ -51,7 +51,7 @@ const unsigned long Co2Interval = 1000;
 
 const char *ssid = "NCW-Personal";
 const char *password = "Ncw5201314";
-const char *mqtt_server = "192.168.1.200";
+const char *mqtt_server = "192.168.1.201";
 const char *mqtt_user = "michaelng1129";
 const char *mqtt_password = "test1234";
 const char *mqtt_client_id = "ESP32_Sensor";
@@ -137,21 +137,25 @@ void loop()
   float ch2o = getCH2O();
   int co2 = getCO2();
   uint8_t ledPattern;
+  String servoAngle;
+  bool atomizationCoolingState = false;
+  bool fanState = false;
 
   if (currentMillis - previousMillisTemperature >= temperatureInterval)
   {
     previousMillisTemperature += temperatureInterval;
-
-    // if (temperature > TEMPERATURE_THRESHOLD)
-    // {
-    //   Serial.println("High temperature detected! Activating cooling system.");
-    //   setAtomizationCooling(true);
-    // }
-    // else
-    // {
-    //   setAtomizationCooling(false);
-    // }
     Serial.println("Temperature: " + String(temperature) + " °C");
+    if (temperature > TEMPERATURE_THRESHOLD)
+    {
+      Serial.println("High temperature detected! Activating cooling system.");
+      setAtomizationCooling(true);
+      atomizationCoolingState = true;
+    }
+    else
+    {
+      setAtomizationCooling(false);
+      atomizationCoolingState = false;
+    }
   }
 
   if (currentMillis - previousMillisHumidity >= humidityInterval)
@@ -162,6 +166,7 @@ void loop()
     int rightServoAngle = map(humidity, 0, 100, 180, 0);
     controlLeftWindowsServo(leftServoAngle);
     controlRightWindowsServo(rightServoAngle);
+    servoAngle = String(leftServoAngle) + "," + String(rightServoAngle);
 
     Serial.println("Humidity: " + String(humidity) + "%");
   }
@@ -206,10 +211,12 @@ void loop()
     {
       Serial.println("High CO2 detected (" + String(co2) + " ppm)! Activating fan at " + String(FAN_SPEED) + "% speed.");
       setFanSpeed(FAN_SPEED);
+      fanState = true;
     }
     else
     {
       setFanSpeed(0);
+      fanState = false;
     }
     if (updateAirSensorData())
     {
@@ -225,8 +232,11 @@ void loop()
   {
     client.publish("esp32/temperature", String(temperature).c_str());
     client.publish("esp32/humidity", String(humidity).c_str());
+    client.publish("esp32/atomizationCooling", String(atomizationCoolingState).c_str());
+    client.publish("esp32/servoAngle", String(servoAngle).c_str());
     client.publish("esp32/light", String(lightLevel).c_str());
     client.publish("esp32/co2", String(co2).c_str());
+    client.publish("esp32/fanStatus", String(fanState).c_str());
     client.publish("esp32/tvoc", String(tvoc).c_str());
     client.publish("esp32/ch2o", String(ch2o).c_str());
   }
