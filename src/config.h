@@ -4,7 +4,10 @@
 #define DHT_PIN 33
 #define DHT_TYPE DHT22
 
-#define LED_DATA_PIN 13
+#define LED_DATA_PIN 23
 
 #define AIR_TX_PIN 17
 #define AIR_RX_PIN 16
+
+#define INA_PIN 18
+#define INB_PIN 19

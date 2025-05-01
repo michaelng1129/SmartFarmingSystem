@@ -1,7 +1,6 @@
 #include <Arduino.h>
 #include <Wire.h>
 
-
 void setupServo();
 void controlLeftWindowsServo(int angle);
 void controlRightWindowsServo(int angle);
@@ -23,11 +22,12 @@ void setupAirSensor();
 bool updateAirSensorData();
 float getTVOC();
 float getCH2O();
-float getCO2();
+int getCO2();
+void setupFanMotor();
+void setFanSpeed(float duty_cycle);
 
-
-
-void setup() {
+void setup()
+{
   Serial.begin(115200);
   Wire.begin();
   setupServo();
@@ -37,10 +37,11 @@ void setup() {
   Serial.println(getMTreg());
   setupLED();
   setupAirSensor();
+  setupFanMotor();
 }
 
-void loop() {
-
+void loop()
+{
   float temperature = getTemperature();
   float humidity = getHumidity();
   float lightLevel = getLightLevel();
@@ -48,29 +49,21 @@ void loop() {
   Serial.println("Temperature: " + String(temperature) + " °C, Humidity: " + String(humidity));
   Serial.println("Light Level: " + String(lightLevel) + " lux");
 
-  controlLeftWindowsServo(90);
-  controlRightWindowsServo(90);
+  // controlLeftWindowsServo(90);
+  // controlRightWindowsServo(90);
 
-  
-  delay(1000); 
-  displayPattern(6);  // All LEDs
+  delay(1000);
+  // displayPattern(6); // All LEDs
 
-  if (updateAirSensorData()) {
-    Serial.print("TVOC: ");
-    Serial.print(getTVOC());
-    Serial.println(" mg/m³");
-
-    Serial.print("CH2O: ");
-    Serial.print(getCH2O());
-    Serial.println(" mg/m³");
-
-    Serial.print("CO2: ");
-    Serial.print(getCO2());
-    Serial.println(" ppm");
-  } else {
+  if (updateAirSensorData())
+  {
+    Serial.println("TVOC: " + String(getTVOC()) + " mg/m³, " + "CH2O: " + String(getCH2O()) + " mg/m³, " + "CO2: " + String(getCO2()) + " ppm");
+  }
+  else
+  {
     Serial.println("Failed to read air sensor data.");
   }
 
   delay(2000);
-
+  setFanSpeed(0);
 }
