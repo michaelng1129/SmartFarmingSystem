@@ -11,3 +11,5 @@
 
 #define INA_PIN 18
 #define INB_PIN 19
+
+#define ATOMIZATIONCOOLING_PIN 13

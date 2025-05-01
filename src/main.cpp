@@ -25,6 +25,8 @@ float getCH2O();
 int getCO2();
 void setupFanMotor();
 void setFanSpeed(float duty_cycle);
+void setupAtomizationCooling();
+void setAtomizationCooling(bool state);
 
 void setup()
 {
@@ -38,6 +40,7 @@ void setup()
   setupLED();
   setupAirSensor();
   setupFanMotor();
+  setupAtomizationCooling();
 }
 
 void loop()
@@ -49,11 +52,10 @@ void loop()
   Serial.println("Temperature: " + String(temperature) + " °C, Humidity: " + String(humidity));
   Serial.println("Light Level: " + String(lightLevel) + " lux");
 
-  // controlLeftWindowsServo(90);
-  // controlRightWindowsServo(90);
+  controlLeftWindowsServo(90);
+  controlRightWindowsServo(90);
 
-  delay(1000);
-  // displayPattern(6); // All LEDs
+  displayPattern(6); // All LEDs
 
   if (updateAirSensorData())
   {
@@ -65,5 +67,10 @@ void loop()
   }
 
   delay(2000);
-  setFanSpeed(0);
+  // setFanSpeed(0);
+
+  setAtomizationCooling(true);
+  delay(1000);
+  setAtomizationCooling(false);
+  delay(10000);
 }
