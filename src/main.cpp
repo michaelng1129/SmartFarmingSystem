@@ -32,9 +32,9 @@ void setAtomizationCooling(bool state);
 void setupWiFi();
 void reconnect();
 
-const float TEMPERATURE_THRESHOLD = 35.0;
+const float TEMPERATURE_THRESHOLD = 30.0;
 const float OPTIMAL_LUX = 500.0;
-const int CO2_THRESHOLD = 500;
+const int CO2_THRESHOLD = 600;
 const float FAN_SPEED = 30.0;
 
 unsigned long previousMillisTemperature = 0;
@@ -49,9 +49,9 @@ const unsigned long lightInterval = 1000;
 unsigned long previousMillisCo2 = 0;
 const unsigned long Co2Interval = 1000;
 
-const char *ssid = "NCW-Personal";
-const char *password = "Ncw5201314";
-const char *mqtt_server = "192.168.1.201";
+const char *ssid = "ENG-LAB-N2";
+const char *password = "12345678";
+const char *mqtt_server = "192.168.68.132";
 const char *mqtt_user = "michaelng1129";
 const char *mqtt_password = "test1234";
 const char *mqtt_client_id = "ESP32_Sensor";
