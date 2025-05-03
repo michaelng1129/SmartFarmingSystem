@@ -10,6 +10,16 @@
 #include <HardwareSerial.h>
 #include <driver/mcpwm.h>
 
+#define LEFTWINDOWSSERVO_PIN 25
+#define RIGHTWINDOWSSERVO_PIN 26
+#define DHT_PIN 33
+#define LED_DATA_PIN 23
+#define AIR_TX_PIN 17
+#define AIR_RX_PIN 16
+#define INA_PIN 18
+#define INB_PIN 19
+#define ATOMIZATIONCOOLING_PIN 13
+
 unsigned long previousMillisTemperature = 0;
 const unsigned long temperatureInterval = 1000;
 unsigned long previousMillisHumidity = 0;
@@ -35,7 +45,7 @@ WiFiClient espClient;
 PubSubClient client(espClient);
 Servo leftWindowsServo;
 Servo rightWindowsServo;
-DHT dht(DHT_PIN, DHT_TYPE);
+DHT dht(DHT_PIN, DHT22);
 BH1750 lightMeter;
 Adafruit_NeoPixel strip(NUM_LEDS, LED_DATA_PIN, NEO_GRB + NEO_KHZ800);
 HardwareSerial airSensorSerial(2);
@@ -47,9 +57,10 @@ float FAN_SPEED = 30.0;
 
 // const char *ssid = "ENG-LAB-N2";
 // const char *password = "12345678";
+// const char *mqtt_server = "192.168.68.132";
 const char *ssid = "NCW-Personal";
 const char *password = "Ncw5201314";
-const char *mqtt_server = "192.168.68.132";
+const char *mqtt_server = "192.168.1.200";
 const char *mqtt_user = "michaelng1129";
 const char *mqtt_password = "test1234";
 const char *mqtt_client_id = "ESP32_Sensor";
